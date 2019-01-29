@@ -5,6 +5,7 @@ import {
   AllureStep,
   AllureTest,
   ContentType,
+  ExecutableItemWrapper,
   GlobalInfoWriter,
   LabelName,
   Stage,
@@ -18,6 +19,7 @@ export class AllureReporter {
   private steps: AllureStep[] = [];
   private runningTest: AllureTest | null = null;
   private runtime: AllureRuntime | null = null;
+  private runningExecutable: ExecutableItemWrapper | null = null;
 
   public setupRuntime(path: string) {
     this.runtime = new AllureRuntime({ resultsDir: path });
@@ -53,6 +55,14 @@ export class AllureReporter {
     this.runningTest = test;
   }
 
+  get currentExecutable(): ExecutableItemWrapper | null {
+    return this.runningExecutable;
+  }
+
+  set currentExecutable(executable: ExecutableItemWrapper | null) {
+    this.runningExecutable = executable;
+  }
+
   public startSuite(suiteName: string) {
     if (suiteName) {
       const scope = this.currentSuite || this.runtime;
@@ -71,6 +81,29 @@ export class AllureReporter {
       }
       this.currentSuite.endGroup();
       this.popSuite();
+    }
+  }
+
+  public startHook(title: string) {
+    const suite = this.currentSuite;
+
+    if (suite && title && title.indexOf('before') !== -1) {
+      this.currentExecutable = suite.addBefore();
+    } else if (suite && title && title.indexOf('after') !== -1) {
+      this.currentExecutable = suite.addAfter();
+    }
+  }
+
+  public endHook(error?: any) {
+    if (this.currentExecutable) {
+      this.currentExecutable.stage = Stage.FINISHED;
+
+      if (error) {
+        this.currentExecutable.status = Status.FAILED;
+        this.currentExecutable.statusDetails = { message: error.message, trace: error.stack };
+      } else {
+        this.currentExecutable.status = Status.PASSED;
+      }
     }
   }
 

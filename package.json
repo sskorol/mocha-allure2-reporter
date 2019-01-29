@@ -1,6 +1,6 @@
 {
   "name": "mocha-allure2-reporter",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Allure 2 reporter for Mocha framework",
   "main": "index.js",
   "keywords": [
@@ -38,6 +38,7 @@
     "fs-jetpack": "^2.2.0",
     "husky": "^1.1.2",
     "lint-staged": "^7.3.0",
+    "lodash": "^4.17.11",
     "mocha": "^5.2.0",
     "mocha-typescript": "^1.1.17",
     "nyc": "^13.1.0",

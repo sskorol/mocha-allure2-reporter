@@ -1,4 +1,5 @@
-import jetpack = require('fs-jetpack');
+import * as jetpack from 'fs-jetpack';
+import * as _ from 'lodash';
 import * as Mocha from 'mocha';
 import * as path from 'path';
 import * as PropertiesReader from 'properties-reader';
@@ -62,6 +63,14 @@ export function findAttachments(testName: string): any[] {
 
 export function findStepAttachments(testName: string, stepName: string): any[] {
   return findStep(testName, stepName).attachments;
+}
+
+export function findAfterTestAttachments(testName: string): any[] {
+  return _.flatten(findTestAfters(testName).map(after => after.attachments));
+}
+
+export function findTestAfters(testName: string): any[] {
+  return findTest(testName).afters;
 }
 
 export function findLinks(testName: string): any[] {

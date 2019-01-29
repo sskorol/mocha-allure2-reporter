@@ -20,4 +20,8 @@ class AttachmentSubSuite {
     });
     allure.testAttachment('test attachment 2', '{ "key": "value" }', ContentType.JSON);
   }
+
+  public after() {
+    allure.attachment('after test attachment 1', 'after test attachment content', ContentType.TEXT);
+  }
 }
