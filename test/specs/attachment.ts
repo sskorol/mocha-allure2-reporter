@@ -10,6 +10,7 @@ import {
   runTests,
   whenResultsAppeared
 } from '../utils';
+import { findAfterTestAttachments } from '../utils/index';
 
 @suite
 class AttachmentsSuite {
@@ -47,6 +48,11 @@ class AttachmentsSuite {
       expect(stepAttachments[0].type).eq('text/plain');
       expect(stepAttachments[1].name).eq('step 2 attachment 2');
       expect(stepAttachments[1].type).eq('text/plain');
+
+      const afterTestAttachments = findAfterTestAttachments('AttachmentSubSuite');
+      expect(afterTestAttachments).length(1);
+      expect(afterTestAttachments[0].name).eq('after test attachment 1');
+      expect(afterTestAttachments[0].type).eq('text/plain');
     });
   }
 }

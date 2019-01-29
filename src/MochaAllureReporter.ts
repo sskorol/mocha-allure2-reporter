@@ -19,7 +19,9 @@ export class MochaAllureReporter extends Mocha.reporters.Base {
       .on('test', this.onTest.bind(this))
       .on('pass', this.onPassed.bind(this))
       .on('fail', this.onFailed.bind(this))
-      .on('pending', this.onPending.bind(this));
+      .on('pending', this.onPending.bind(this))
+      .on('hook', this.onHookStart.bind(this))
+      .on('hook end', this.onHookEnd.bind(this));
   }
 
   private onSuite(suite: Mocha.Suite) {
@@ -45,5 +47,13 @@ export class MochaAllureReporter extends Mocha.reporters.Base {
 
   private onPending(test: Mocha.Test) {
     allure.pendingTestCase(test);
+  }
+
+  private onHookStart(hook: Mocha.Hook) {
+    allure.startHook(hook.title);
+  }
+
+  private onHookEnd(hook: Mocha.Hook) {
+    allure.endHook(hook.error());
   }
 }

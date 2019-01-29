@@ -17,6 +17,18 @@ export class MochaAllureInterface extends AllureInterface {
     super();
   }
 
+  public get currentExecutable(): ExecutableItemWrapper {
+    const executable = this.reporter.currentStep || this.reporter.currentTest || this.reporter.currentExecutable;
+    if (executable === null) {
+      throw new Error('No executable!');
+    }
+    return executable;
+  }
+
+  public set currentExecutable(executable: ExecutableItemWrapper) {
+    this.reporter.currentExecutable = executable;
+  }
+
   public setDescription(text: string) {
     this.currentTest.description = text;
     this.currentTest.descriptionHtml = text;
@@ -116,13 +128,5 @@ export class MochaAllureInterface extends AllureInterface {
       throw new Error('No test running!');
     }
     return this.reporter.currentTest;
-  }
-
-  private get currentExecutable(): ExecutableItemWrapper {
-    const executable = this.reporter.currentStep || this.reporter.currentTest;
-    if (executable === null) {
-      throw new Error('No executable!');
-    }
-    return executable;
   }
 }
